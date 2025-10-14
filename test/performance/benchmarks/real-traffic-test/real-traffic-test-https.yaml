@@ -35,7 +35,7 @@ roleRef:
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: real-traffic-test
+  name: real-traffic-test-https
   namespace: default
 spec:
   parallelism: 1
@@ -49,6 +49,7 @@ spec:
         args:
         - "-number-of-services=50"
         - "-requests-per-second=2000"
+        - "-protocol=https"
         env:
           - name: KO_DOCKER_REPO
             value: $KO_DOCKER_REPO
@@ -74,6 +75,8 @@ spec:
               secretKeyRef:
                 name: performance-test-config
                 key: buildid
+          - name: SSL_CERT_FILE
+            value: /etc/ssl/certs/serving/ca.crt
         resources:
           requests:
             cpu: 1000m
@@ -81,6 +84,10 @@ spec:
           limits:
             cpu: 1000m
             memory: 3Gi
+        volumeMounts:
+        - name: serving-certs
+          mountPath: /etc/ssl/certs/serving
+          readOnly: true
         securityContext:
           seccompProfile:
             type: RuntimeDefault
@@ -90,4 +97,8 @@ spec:
           capabilities:
             drop:
               - ALL
+      volumes:
+      - name: serving-certs
+        secret:
+          secretName: serving-certs
       restartPolicy: Never
