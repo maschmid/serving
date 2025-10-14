@@ -6,6 +6,7 @@ CORE_IMAGES=./cmd/activator ./cmd/autoscaler ./cmd/autoscaler-hpa ./cmd/controll
 TEST_IMAGES=$(shell find ./test/test_images ./test/test_images/multicontainer -mindepth 1 -maxdepth 1 -type d)
 # Exclude wrapper images like multicontainer and initcontainers as those are just ko convenience wrappers used upstream. The openshift serverless tests use other images to run.
 TEST_IMAGES_WITHOUT_WRAPPERS=$(shell find ./test/test_images ./test/test_images/multicontainer -mindepth 1 -maxdepth 1 -type d -not -name multicontainer -not -name initcontainers)
+PERF_IMAGES=$(shell find ./test/performance/benchmarks -mindepth 1 -maxdepth 1)
 BRANCH=
 TEST=
 IMAGE=
@@ -25,6 +26,12 @@ test-install:
 		go install $$img ; \
 	done
 .PHONY: test-install
+
+perf-install:
+	for img in $(PERF_IMAGES); do \
+		go install $$img ; \
+	done
+.PHONY: perf-install
 
 test-e2e:
 	./openshift/e2e-tests.sh

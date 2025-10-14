@@ -74,6 +74,7 @@ const (
 var (
 	numberOfServices = flag.Int("number-of-services", 10, "The number of Knative Services to create")
 	rps              = flag.Int("requests-per-second", 300, "The of requests per second to send")
+	protocol         = flag.String("protocol", "http", "The protocol to use for HTTP requests")
 )
 
 type serviceConfig struct {
@@ -136,7 +137,7 @@ func main() {
 	for _, svc := range services {
 		t := vegeta.Target{
 			Method: http.MethodPost,
-			URL:    fmt.Sprintf("http://%s.default.svc.cluster.local?sleep=%d", svc.resourceObjects.Service.Name, svc.latency),
+			URL:    fmt.Sprintf("%s://%s.default.svc.cluster.local?sleep=%d", *protocol, svc.resourceObjects.Service.Name, svc.latency),
 			Body:   svc.payload,
 		}
 		targets = append(targets, t)
