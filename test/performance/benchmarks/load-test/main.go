@@ -42,6 +42,7 @@ const (
 )
 
 var flavor = flag.String("flavor", "", "The flavor of the benchmark to run.")
+var protocol = flag.String("protocol", "http", "The protocol to use for HTTP requests")
 
 func main() {
 	ctx := signals.NewContext()
@@ -60,7 +61,7 @@ func main() {
 	ctx, cancel := context.WithTimeout(ctx, 8*time.Minute)
 	defer cancel()
 
-	influxReporter, err := performance.NewInfluxReporter(map[string]string{"flavor": *flavor})
+	influxReporter, err := performance.NewInfluxReporter(map[string]string{"flavor": *flavor, "protocol": *protocol})
 	if err != nil {
 		log.Fatalf("failed to create influx reporter: %v", err.Error())
 	}
@@ -69,7 +70,7 @@ func main() {
 	log.Print("Starting the load test.")
 	// Ramp up load from 1k to 3k in 2 minute steps.
 	const duration = 2 * time.Minute
-	url := fmt.Sprintf("http://load-test-%s.default.svc.cluster.local?sleep=100", *flavor)
+	url := fmt.Sprintf("%s://load-test-%s.default.svc.cluster.local?sleep=100", *protocol, *flavor)
 	targeter := vegeta.NewStaticTargeter(vegeta.Target{
 		Method: http.MethodGet,
 		URL:    url,

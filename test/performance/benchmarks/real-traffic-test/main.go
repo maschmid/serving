@@ -118,7 +118,7 @@ func main() {
 		log.Fatal("Failed to setup clients: ", err)
 	}
 
-	influxReporter, err := performance.NewInfluxReporter(map[string]string{"number-of-services": strconv.Itoa(*numberOfServices)})
+	influxReporter, err := performance.NewInfluxReporter(map[string]string{"number-of-services": strconv.Itoa(*numberOfServices), "protocol": *protocol})
 	if err != nil {
 		log.Fatalf("failed to create influx reporter: %v", err.Error())
 	}
