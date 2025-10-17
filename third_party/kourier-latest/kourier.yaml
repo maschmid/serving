@@ -542,7 +542,7 @@ spec:
             - /usr/local/bin/envoy
           env:
             - name: DRAIN_TIME_SECONDS
-              value: "15"
+              value: "55"
           image: docker.io/envoyproxy/envoy:v1.34-latest
           name: kourier-gateway
           ports:
@@ -612,7 +612,7 @@ spec:
               cpu: "1"
               memory: 800Mi
       # to ensure a graceful drain, terminationGracePeriodSeconds must be greater than DRAIN_TIME_SECONDS environment variable
-      terminationGracePeriodSeconds: 30
+      terminationGracePeriodSeconds: 60
       volumes:
         - name: config-volume
           configMap:
