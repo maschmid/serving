@@ -44,6 +44,7 @@ import (
 var (
 	target   = flag.String("target", "", "The target to attack.")
 	duration = flag.Duration("duration", 5*time.Minute, "The duration of the probe")
+	protocol = flag.String("protocol", "http", "The protocol to use for HTTP requests")
 )
 
 // Map the above to our benchmark targets.
@@ -51,19 +52,19 @@ var targets = map[string]struct{ target vegeta.Target }{
 	"queue-proxy-with-cc": {
 		target: vegeta.Target{
 			Method: http.MethodGet,
-			URL:    "http://queue-proxy-with-cc.default.svc.cluster.local?sleep=100",
+			URL:    *protocol + "://queue-proxy-with-cc.default.svc.cluster.local?sleep=100",
 		},
 	},
 	"activator-with-cc": {
 		target: vegeta.Target{
 			Method: http.MethodGet,
-			URL:    "http://activator-with-cc.default.svc.cluster.local?sleep=100",
+			URL:    *protocol + "://activator-with-cc.default.svc.cluster.local?sleep=100",
 		},
 	},
 	"activator-with-cc-lin": {
 		target: vegeta.Target{
 			Method: http.MethodGet,
-			URL:    "http://activator-with-cc-lin.default.svc.cluster.local?sleep=100",
+			URL:    *protocol + "://activator-with-cc-lin.default.svc.cluster.local?sleep=100",
 		},
 	},
 }

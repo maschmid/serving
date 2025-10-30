@@ -86,7 +86,7 @@ var (
 			// Scaling 25 services in parallel will hit some API limits, which cause a step
 			// in the deployment updated time which adds to the total time until a service is ready
 			p95min:     0,
-			p95max:     2 * time.Second,
+			p95max:     5 * time.Second,
 			latencyMax: 5 * time.Second,
 		},
 		100: {

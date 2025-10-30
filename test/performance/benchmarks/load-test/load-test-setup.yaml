@@ -47,6 +47,18 @@ spec:
 apiVersion: serving.knative.dev/v1
 kind: Service
 metadata:
+  name: load-test-default
+  namespace: default
+spec:
+  template:
+    spec:
+      containers:
+      - image: ko://knative.dev/serving/test/test_images/autoscale
+      containerConcurrency: 0 # Explicitly set the default, since it might be overridden in CM.
+---
+apiVersion: serving.knative.dev/v1
+kind: Service
+metadata:
   name: load-test-200
   namespace: default
 spec:

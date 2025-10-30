@@ -40,6 +40,7 @@ const (
 var (
 	target     = flag.String("target", "", "The target to attack.")
 	duration   = flag.Duration("duration", 5*time.Minute, "The duration of the probe")
+	protocol   = flag.String("protocol", "http", "The protocol to use for HTTP requests")
 	minDefault = 100 * time.Millisecond
 )
 
@@ -52,7 +53,7 @@ var targets = map[string]struct {
 	"deployment": {
 		target: vegeta.Target{
 			Method: http.MethodGet,
-			URL:    "http://deployment.default.svc.cluster.local?sleep=100",
+			URL:    *protocol + "://deployment.default.svc.cluster.local?sleep=100",
 		},
 		// vanilla deployment falls in the +5ms range. This does not have Knative or Istio components
 		// on the dataplane, and so it is intended as a canary to flag environmental
@@ -63,7 +64,7 @@ var targets = map[string]struct {
 	"queue": {
 		target: vegeta.Target{
 			Method: http.MethodGet,
-			URL:    "http://queue-proxy.default.svc.cluster.local?sleep=100",
+			URL:    *protocol + "://queue-proxy.default.svc.cluster.local?sleep=100",
 		},
 		// hitting a Knative Service
 		// going through JUST the queue-proxy falls in the +10ms range.
@@ -73,7 +74,7 @@ var targets = map[string]struct {
 	"activator": {
 		target: vegeta.Target{
 			Method: http.MethodGet,
-			URL:    "http://activator.default.svc.cluster.local?sleep=100",
+			URL:    *protocol + "://activator.default.svc.cluster.local?sleep=100",
 		},
 		// hitting a Knative Service
 		// going through BOTH the activator and queue-proxy falls in the +10ms range.

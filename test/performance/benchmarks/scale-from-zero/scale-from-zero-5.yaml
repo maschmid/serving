@@ -39,6 +39,7 @@ metadata:
   namespace: default
 spec:
   parallelism: 1
+  backoffLimit: 0
   template:
     spec:
       serviceAccountName: scale-from-zero
